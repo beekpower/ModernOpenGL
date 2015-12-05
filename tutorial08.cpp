@@ -88,7 +88,7 @@ int main( void )
 	GLuint vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
 
 	// Load the texture
-	GLuint Texture = loadDDS("uvmap.DDS");
+	GLuint Texture = loadBMP_custom("bricks.bmp");
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
@@ -101,7 +101,7 @@ int main( void )
 	/* Insert obj file here */
 	/*********************************************/
 
-	bool res = loadOBJ("coolShape.obj", vertices, uvs, normals);
+	bool res = loadOBJ("mesh.obj", vertices, uvs, normals);
 
 	/*********************************************/
 
