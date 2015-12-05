@@ -3,9 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <GL/glew.h>
+#ifdef __linux__
 
+#elif _WIN32
+// Include GLEW
+#include <GL/glew.h>
+// Include GLFW
 #include "GLFW\glfw3.h"
+#elif __APPLE__
+#include <glew.h>
+#include <glfw3.h>
+#endif
+
 
 
 GLuint loadBMP_custom(const char * imagepath){

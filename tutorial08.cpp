@@ -3,16 +3,25 @@
 #include <stdlib.h>
 #include <vector>
 
+#ifdef __linux__
+
+#elif _WIN32
 // Include GLEW
 #include <GL/glew.h>
-
 // Include GLFW
 #include "GLFW\glfw3.h"
-GLFWwindow* window;
-
 // Include GLM
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+#elif __APPLE__
+#include <glew.h>
+#include <glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#endif
+
+GLFWwindow* window;
+
 using namespace glm;
 
 #include "shader.hpp"
@@ -20,6 +29,8 @@ using namespace glm;
 #include "camera.hpp"
 #include "texture.hpp"
 #include "vboindexer.hpp"
+
+
 
 int main( void )
 {

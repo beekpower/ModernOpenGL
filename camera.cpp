@@ -1,5 +1,17 @@
+#ifdef __linux__
+
+#elif _WIN32
+// Include GLEW
+#include <GL/glew.h>
 // Include GLFW
 #include "GLFW\glfw3.h"
+#elif __APPLE__
+#include <glew.h>
+#include <glfw3.h>
+#endif
+
+
+
 extern GLFWwindow* window; // The "extern" keyword here is to access the variable "window" declared in tutorialXXX.cpp. This is a hack to keep the tutorials simple. Please avoid this.
 
 // Include GLM
