@@ -1,3 +1,4 @@
+// Utilized and adapted code from https://github.com/opengl-tutorials/ogl/ to help with shaders & camera movement.
 #define _CRT_SECURE_NO_DEPRECATE
 #include <vector>
 #include <stdio.h>

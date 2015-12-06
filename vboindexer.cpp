@@ -1,3 +1,4 @@
+// Utilized and adapted code from https://github.com/opengl-tutorials/ogl/ to help with shaders & camera movement.
 #include "vboindexer.hpp"
 
 // Returns true iif v1 can be considered equal to v2

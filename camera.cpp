@@ -1,3 +1,4 @@
+// Utilized and adapted code from https://github.com/opengl-tutorials/ogl/ to help with shaders & camera movement.
 #ifdef __linux__
 
 #elif _WIN32

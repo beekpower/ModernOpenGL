@@ -1,3 +1,5 @@
+// Utilized and adapted code from https://github.com/opengl-tutorials/ogl/ to help with shaders & camera movement.
+
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
