@@ -438,7 +438,8 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(4,4,0));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(8,7,8));
+        ModelMatrix = glm::scale(ModelMatrix, vec3(3,3,3));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
@@ -501,7 +502,7 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(12,8,0));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(12,2,0));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
