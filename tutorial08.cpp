@@ -105,33 +105,58 @@ int main( void )
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
 	// Read our .obj file
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
+	std::vector<glm::vec3> verticesMesh;
+	std::vector<glm::vec2> uvsMesh;
+	std::vector<glm::vec3> normalsMesh;
 
 	/* Insert obj file here */
 	/*********************************************/
 
-	bool res = loadOBJ("mesh.obj", vertices, uvs, normals);
+	bool res = loadOBJ("mesh.obj", verticesMesh, uvsMesh, normalsMesh);
 
 	/*********************************************/
 
 	// Load it into a VBO
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	GLuint vertexbufferMesh;
+	glGenBuffers(1, &vertexbufferMesh);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferMesh);
+	glBufferData(GL_ARRAY_BUFFER, verticesMesh.size() * sizeof(glm::vec3), &verticesMesh[0], GL_STATIC_DRAW);
 
-	GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+	GLuint uvbufferMesh;
+	glGenBuffers(1, &uvbufferMesh);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbufferMesh);
+	glBufferData(GL_ARRAY_BUFFER, uvsMesh.size() * sizeof(glm::vec2), &uvsMesh[0], GL_STATIC_DRAW);
 
-	GLuint normalbuffer;
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	GLuint normalbufferMesh;
+	glGenBuffers(1, &normalbufferMesh);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbufferMesh);
+	glBufferData(GL_ARRAY_BUFFER, normalsMesh.size() * sizeof(glm::vec3), &normalsMesh[0], GL_STATIC_DRAW);
+    
+    std::vector<glm::vec3> verticesPin;
+    std::vector<glm::vec2> uvsPin;
+    std::vector<glm::vec3> normalsPin;
+
+    res = loadOBJ("bowlpin.obj", verticesPin, uvsPin, normalsPin);
+    
+    /*********************************************/
+    
+    // Load it into a VBO
+    
+    GLuint vertexbufferPin;
+    glGenBuffers(1, &vertexbufferPin);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbufferPin);
+    glBufferData(GL_ARRAY_BUFFER, verticesPin.size() * sizeof(glm::vec3), &verticesPin[0], GL_STATIC_DRAW);
+    
+    GLuint uvbufferPin;
+    glGenBuffers(1, &uvbufferPin);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbufferPin);
+    glBufferData(GL_ARRAY_BUFFER, uvsPin.size() * sizeof(glm::vec2), &uvsPin[0], GL_STATIC_DRAW);
+    
+    GLuint normalbufferPin;
+    glGenBuffers(1, &normalbufferPin);
+    glBindBuffer(GL_ARRAY_BUFFER, normalbufferPin);
+    glBufferData(GL_ARRAY_BUFFER, normalsPin.size() * sizeof(glm::vec3), &normalsPin[0], GL_STATIC_DRAW);
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
@@ -169,7 +194,7 @@ int main( void )
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(vertexPosition_modelspaceID);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferMesh);
 		glVertexAttribPointer(
 			vertexPosition_modelspaceID,  // The attribute we want to configure
 			3,                            // size
@@ -181,7 +206,7 @@ int main( void )
 
 		// 2nd attribute buffer : UVs
 		glEnableVertexAttribArray(vertexUVID);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbufferMesh);
 		glVertexAttribPointer(
 			vertexUVID,                   // The attribute we want to configure
 			2,                            // size : U+V => 2
@@ -193,7 +218,7 @@ int main( void )
 
 		// 3rd attribute buffer : normals
 		glEnableVertexAttribArray(vertexNormal_modelspaceID);
-		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbufferMesh);
 		glVertexAttribPointer(
 			vertexNormal_modelspaceID,    // The attribute we want to configure
 			3,                            // size
@@ -204,7 +229,70 @@ int main( void )
 		);
 
 		// Draw the triangles !
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
+		glDrawArrays(GL_TRIANGLES, 0, verticesMesh.size() );
+        
+        // Compute the MVP matrix from keyboard and mouse input
+        computeMatricesFromInputs();
+        ProjectionMatrix = getProjectionMatrix();
+        ViewMatrix = getViewMatrix();
+        ModelMatrix = glm::mat4(1.0);
+        
+        ModelMatrix = glm::translate(ModelMatrix, vec3(-4,0,0));
+        
+        MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+        
+        // Send our transformation to the currently bound shader,
+        // in the "MVP" uniform
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+        glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+        
+        glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+        
+        // Bind our texture in Texture Unit 0
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        // Set our "myTextureSampler" sampler to user Texture Unit 0
+        glUniform1i(TextureID, 0);
+        
+        // 1rst attribute buffer : vertices
+        glEnableVertexAttribArray(vertexPosition_modelspaceID);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbufferPin);
+        glVertexAttribPointer(
+                              vertexPosition_modelspaceID,  // The attribute we want to configure
+                              3,                            // size
+                              GL_FLOAT,                     // type
+                              GL_FALSE,                     // normalized?
+                              0,                            // stride
+                              (void*)0                      // array buffer offset
+                              );
+        
+        // 2nd attribute buffer : UVs
+        glEnableVertexAttribArray(vertexUVID);
+        glBindBuffer(GL_ARRAY_BUFFER, uvbufferPin);
+        glVertexAttribPointer(
+                              vertexUVID,                   // The attribute we want to configure
+                              2,                            // size : U+V => 2
+                              GL_FLOAT,                     // type
+                              GL_FALSE,                     // normalized?
+                              0,                            // stride
+                              (void*)0                      // array buffer offset
+                              );
+        
+        // 3rd attribute buffer : normals
+        glEnableVertexAttribArray(vertexNormal_modelspaceID);
+        glBindBuffer(GL_ARRAY_BUFFER, normalbufferPin);
+        glVertexAttribPointer(
+                              vertexNormal_modelspaceID,    // The attribute we want to configure
+                              3,                            // size
+                              GL_FLOAT,                     // type
+                              GL_FALSE,                     // normalized?
+                              0,                            // stride
+                              (void*)0                      // array buffer offset
+                              );
+        
+        // Draw the triangles !
+        glDrawArrays(GL_TRIANGLES, 0, verticesPin.size() );
 
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
 		glDisableVertexAttribArray(vertexUVID);
@@ -219,9 +307,12 @@ int main( void )
 		   glfwWindowShouldClose(window) == 0 );
 
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
+	glDeleteBuffers(1, &vertexbufferMesh);
+	glDeleteBuffers(1, &uvbufferMesh);
+	glDeleteBuffers(1, &normalbufferMesh);
+    glDeleteBuffers(1, &vertexbufferPin);
+    glDeleteBuffers(1, &uvbufferPin);
+    glDeleteBuffers(1, &normalbufferPin);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &Texture);
 
