@@ -258,7 +258,7 @@ int main( void )
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
-		glm::vec3 lightPos = glm::vec3(4,4,4);
+		glm::vec3 lightPos = glm::vec3(4,8,4);
 		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our texture in Texture Unit 0
@@ -312,7 +312,7 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(-4,0,0));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(-2,2,0));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
@@ -375,7 +375,7 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(-6,-2,-2));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(-6,2,-2));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
@@ -438,7 +438,7 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(4,0,0));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(4,4,0));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
@@ -501,7 +501,7 @@ int main( void )
         ViewMatrix = getViewMatrix();
         ModelMatrix = glm::mat4(1.0);
         
-        ModelMatrix = glm::translate(ModelMatrix, vec3(12,-8,0));
+        ModelMatrix = glm::translate(ModelMatrix, vec3(12,8,0));
         
         MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
         
