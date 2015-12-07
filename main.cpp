@@ -777,9 +777,10 @@ int main( void )
 				ProjectionMatrix = getProjectionMatrix();
 				ViewMatrix = getViewMatrix();
 				ModelMatrix = glm::mat4(1.0);
-
-				ModelMatrix = glm::translate(ModelMatrix, vec3(3,5,0));
-
+                ModelMatrix = glm::translate(ModelMatrix, vec3(-10,-1,-5));
+                ModelMatrix = glm::scale(ModelMatrix, vec3(1,1,1));
+                //ModelMatrix = glm::rotate(ModelMatrix, -55.0f, glm::vec3(0.0f, 1.0f, 1.0f));
+        
 				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 				// Send our transformation to the currently bound shader,
@@ -833,7 +834,11 @@ int main( void )
 															);
 
 				// Draw the triangles !
+<<<<<<< HEAD
 				glDrawArrays(GL_TRIANGLE_FAN, 0, verticesOrange.size() );
+=======
+				glDrawArrays(GL_TRIANGLE_STRIP, 0, verticesOrange.size() );
+>>>>>>> origin/master
 
 /*
 
