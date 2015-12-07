@@ -154,6 +154,14 @@ int main( void )
 		// Get a handle for our "myTextureSampler" uniform
 		GLuint TextureIDChair = glGetUniformLocation(programID, "myTextureSampler");
 
+		GLuint TextureAbstract = loadBMP_custom("hammertone.bmp");
+
+		GLuint TextureIDAbstract = glGetUniformLocation(programID, "myTextureSampler");
+
+		GLuint TextureChampagne = loadBMP_custom("coolTex.bmp");
+
+		GLuint TextureIDChampagne = glGetUniformLocation(programID, "myTextureSampler");
+
 
 	// Read our .obj file
 	std::vector<glm::vec3> verticesMesh;
@@ -383,7 +391,55 @@ int main( void )
 		glBindBuffer(GL_ARRAY_BUFFER, normalbufferBottle);
 		glBufferData(GL_ARRAY_BUFFER, normalsBottle.size() * sizeof(glm::vec3), &normalsBottle[0], GL_STATIC_DRAW);
 
+		//******************************************************************************
 
+		std::vector<glm::vec3> verticesITWP;
+		std::vector<glm::vec2> uvsITWP;
+		std::vector<glm::vec3> normalsITWP;
+
+		res = loadOBJ("ITookTheWrongPills.obj", verticesITWP, uvsITWP, normalsITWP);
+
+		// Load it into a VBO
+
+		GLuint vertexbufferITWP;
+		glGenBuffers(1, &vertexbufferITWP);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferITWP);
+		glBufferData(GL_ARRAY_BUFFER, verticesITWP.size() * sizeof(glm::vec3), &verticesITWP[0], GL_STATIC_DRAW);
+
+		GLuint uvbufferITWP;
+		glGenBuffers(1, &uvbufferITWP);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbufferITWP);
+		glBufferData(GL_ARRAY_BUFFER, uvsITWP.size() * sizeof(glm::vec2), &uvsITWP[0], GL_STATIC_DRAW);
+
+		GLuint normalbufferITWP;
+		glGenBuffers(1, &normalbufferITWP);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbufferITWP);
+		glBufferData(GL_ARRAY_BUFFER, normalsITWP.size() * sizeof(glm::vec3), &normalsITWP[0], GL_STATIC_DRAW);
+
+		//******************************************************************************
+
+		std::vector<glm::vec3> verticesChampagne;
+		std::vector<glm::vec2> uvsChampagne;
+		std::vector<glm::vec3> normalsChampagne;
+
+		res = loadOBJ("champagne.obj", verticesChampagne, uvsChampagne, normalsChampagne);
+
+		// Load it into a VBO
+
+		GLuint vertexbufferChampagne;
+		glGenBuffers(1, &vertexbufferChampagne);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChampagne);
+		glBufferData(GL_ARRAY_BUFFER, verticesChampagne.size() * sizeof(glm::vec3), &verticesChampagne[0], GL_STATIC_DRAW);
+
+		GLuint uvbufferChampagne;
+		glGenBuffers(1, &uvbufferChampagne);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbufferChampagne);
+		glBufferData(GL_ARRAY_BUFFER, uvsChampagne.size() * sizeof(glm::vec2), &uvsChampagne[0], GL_STATIC_DRAW);
+
+		GLuint normalbufferChampagne;
+		glGenBuffers(1, &normalbufferChampagne);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbufferChampagne);
+		glBufferData(GL_ARRAY_BUFFER, normalsChampagne.size() * sizeof(glm::vec3), &normalsChampagne[0], GL_STATIC_DRAW);
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
@@ -777,7 +833,7 @@ int main( void )
 															);
 
 				// Draw the triangles !
-				glDrawArrays(GL_TRIANGLES, 0, verticesOrange.size() );
+				glDrawArrays(GL_TRIANGLE_FAN, 0, verticesOrange.size() );
 
 /*
 
@@ -974,6 +1030,138 @@ int main( void )
 				// Draw the triangles !
 				glDrawArrays(GL_TRIANGLES, 0, verticesBottle.size() );
 
+
+				// Draw ITookTheWrongPills
+				computeMatricesFromInputs();
+				ProjectionMatrix = getProjectionMatrix();
+				ViewMatrix = getViewMatrix();
+				ModelMatrix = glm::mat4(1.0);
+
+				ModelMatrix = glm::translate(ModelMatrix, vec3(-10, 5, 6));
+				ModelMatrix = glm::scale(ModelMatrix, vec3(3, 2, 3));
+				ModelMatrix = glm::rotate(ModelMatrix, -55.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+				// Send our transformation to the currently bound shader,
+				// in the "MVP" uniform
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+				glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+				glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+
+				// Bind our texture in Texture Unit 0
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, TextureAbstract);
+				// Set our "myTextureSampler" sampler to user Texture Unit 0
+				glUniform1i(TextureIDAbstract, 0);
+
+				// 1rst attribute buffer : vertices
+				glEnableVertexAttribArray(vertexPosition_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexbufferITWP);
+				glVertexAttribPointer(
+					vertexPosition_modelspaceID,  // The attribute we want to configure
+					3,                            // size
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// 2nd attribute buffer : UVs
+				glEnableVertexAttribArray(vertexUVID);
+				glBindBuffer(GL_ARRAY_BUFFER, uvbufferITWP);
+				glVertexAttribPointer(
+					vertexUVID,                   // The attribute we want to configure
+					2,                            // size : U+V => 2
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// 3rd attribute buffer : normals
+				glEnableVertexAttribArray(vertexNormal_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, normalbufferITWP);
+				glVertexAttribPointer(
+					vertexNormal_modelspaceID,    // The attribute we want to configure
+					3,                            // size
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// Draw the triangles !
+				glDrawArrays(GL_TRIANGLES, 0, verticesITWP.size());
+
+				//**************************************************************************************
+
+				// Draw Champagne Glass
+				computeMatricesFromInputs();
+				ProjectionMatrix = getProjectionMatrix();
+				ViewMatrix = getViewMatrix();
+				ModelMatrix = glm::mat4(1.0);
+
+				ModelMatrix = glm::translate(ModelMatrix, vec3(2, 7, 2));
+				ModelMatrix = glm::scale(ModelMatrix, vec3(3, 2, 3));
+				ModelMatrix = glm::rotate(ModelMatrix, -55.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+				// Send our transformation to the currently bound shader,
+				// in the "MVP" uniform
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+				glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+				glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+
+				// Bind our texture in Texture Unit 0
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, TextureChampagne);
+				// Set our "myTextureSampler" sampler to user Texture Unit 0
+				glUniform1i(TextureIDChampagne, 0);
+
+				// 1rst attribute buffer : vertices
+				glEnableVertexAttribArray(vertexPosition_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChampagne);
+				glVertexAttribPointer(
+					vertexPosition_modelspaceID,  // The attribute we want to configure
+					3,                            // size
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// 2nd attribute buffer : UVs
+				glEnableVertexAttribArray(vertexUVID);
+				glBindBuffer(GL_ARRAY_BUFFER, uvbufferChampagne);
+				glVertexAttribPointer(
+					vertexUVID,                   // The attribute we want to configure
+					2,                            // size : U+V => 2
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// 3rd attribute buffer : normals
+				glEnableVertexAttribArray(vertexNormal_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, normalbufferChampagne);
+				glVertexAttribPointer(
+					vertexNormal_modelspaceID,    // The attribute we want to configure
+					3,                            // size
+					GL_FLOAT,                     // type
+					GL_FALSE,                     // normalized?
+					0,                            // stride
+					(void*)0                      // array buffer offset
+					);
+
+				// Draw the triangles !
+				glDrawArrays(GL_TRIANGLES, 0, verticesChampagne.size());
 
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
 		glDisableVertexAttribArray(vertexUVID);
