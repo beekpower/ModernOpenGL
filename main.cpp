@@ -117,6 +117,12 @@ int main( void )
     
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureIDLine  = glGetUniformLocation(programID, "myTextureSampler");
+    
+    // Load the texture
+    GLuint TextureTextured = loadBMP_custom("textured.bmp");
+    
+    // Get a handle for our "myTextureSampler" uniform
+    GLuint TextureIDTextured  = glGetUniformLocation(programID, "myTextureSampler");
 
     
 	// Read our .obj file
@@ -473,9 +479,9 @@ int main( void )
         
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Texture);
+        glBindTexture(GL_TEXTURE_2D, TextureTextured);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
-        glUniform1i(TextureID, 0);
+        glUniform1i(TextureIDTextured, 0);
         
         // 1rst attribute buffer : vertices
         glEnableVertexAttribArray(vertexPosition_modelspaceID);
