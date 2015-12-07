@@ -149,10 +149,10 @@ int main( void )
 		GLuint TextureIDBarrel = glGetUniformLocation(programID, "myTextureSampler");
 
 		// Load the texture
-		GLuint TextureChair = loadBMP_custom("chair.bmp");
+		//GLuint TextureChair = loadBMP_custom("chair.bmp");
 
-		// Get a handle for our "myTextureSampler" uniform
-		GLuint TextureIDChair = glGetUniformLocation(programID, "myTextureSampler");
+		//// Get a handle for our "myTextureSampler" uniform
+		//GLuint TextureIDChair = glGetUniformLocation(programID, "myTextureSampler");
 
 		GLuint TextureAbstract = loadBMP_custom("hammertone.bmp");
 
@@ -343,29 +343,29 @@ int main( void )
 		glBufferData(GL_ARRAY_BUFFER, normalsBarrel.size() * sizeof(glm::vec3), &normalsBarrel[0], GL_STATIC_DRAW);
 */
 
-		std::vector<glm::vec3> verticesChair;
-		std::vector<glm::vec2> uvsChair;
-		std::vector<glm::vec3> normalsChair;
+		//std::vector<glm::vec3> verticesChair;
+		//std::vector<glm::vec2> uvsChair;
+		//std::vector<glm::vec3> normalsChair;
 
 
-		res = loadOBJ("chair.obj", verticesChair, uvsChair, normalsChair);
+		//res = loadOBJ("chair.obj", verticesChair, uvsChair, normalsChair);
 
-		// Load it into a VBO
+		//// Load it into a VBO
 
-		GLuint vertexbufferChair;
-		glGenBuffers(1, &vertexbufferChair);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
-		glBufferData(GL_ARRAY_BUFFER, verticesChair.size() * sizeof(glm::vec3), &verticesChair[0], GL_STATIC_DRAW);
+		//GLuint vertexbufferChair;
+		//glGenBuffers(1, &vertexbufferChair);
+		//glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
+		//glBufferData(GL_ARRAY_BUFFER, verticesChair.size() * sizeof(glm::vec3), &verticesChair[0], GL_STATIC_DRAW);
 
-		GLuint uvbufferChair;
-		glGenBuffers(1, &uvbufferChair);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
-		glBufferData(GL_ARRAY_BUFFER, uvsChair.size() * sizeof(glm::vec2), &uvsChair[0], GL_STATIC_DRAW);
+		//GLuint uvbufferChair;
+		//glGenBuffers(1, &uvbufferChair);
+		//glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
+		//glBufferData(GL_ARRAY_BUFFER, uvsChair.size() * sizeof(glm::vec2), &uvsChair[0], GL_STATIC_DRAW);
 
-		GLuint normalbufferChair;
-		glGenBuffers(1, &normalbufferChair);
-		glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
-		glBufferData(GL_ARRAY_BUFFER, normalsChair.size() * sizeof(glm::vec3), &normalsChair[0], GL_STATIC_DRAW);
+		//GLuint normalbufferChair;
+		//glGenBuffers(1, &normalbufferChair);
+		//glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
+		//glBufferData(GL_ARRAY_BUFFER, normalsChair.size() * sizeof(glm::vec3), &normalsChair[0], GL_STATIC_DRAW);
 
 		std::vector<glm::vec3> verticesBottle;
 		std::vector<glm::vec2> uvsBottle;
@@ -904,67 +904,67 @@ int main( void )
 
 
 				// Draw chair
-				computeMatricesFromInputs();
-				ProjectionMatrix = getProjectionMatrix();
-				ViewMatrix = getViewMatrix();
-				ModelMatrix = glm::mat4(1.0);
+				//computeMatricesFromInputs();
+				//ProjectionMatrix = getProjectionMatrix();
+				//ViewMatrix = getViewMatrix();
+				//ModelMatrix = glm::mat4(1.0);
 
-				ModelMatrix = glm::translate(ModelMatrix, vec3(-7,3,10));
+				//ModelMatrix = glm::translate(ModelMatrix, vec3(-7,3,10));
 
-				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+				//MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-				// Send our transformation to the currently bound shader,
-				// in the "MVP" uniform
-				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-				glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
-				glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+				//// Send our transformation to the currently bound shader,
+				//// in the "MVP" uniform
+				//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				//glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+				//glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
-				glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+				//glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
-				// Bind our texture in Texture Unit 0
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, TextureChair);
-				// Set our "myTextureSampler" sampler to user Texture Unit 0
-				glUniform1i(TextureIDChair, 0);
+				//// Bind our texture in Texture Unit 0
+				//glActiveTexture(GL_TEXTURE0);
+				//glBindTexture(GL_TEXTURE_2D, TextureChair);
+				//// Set our "myTextureSampler" sampler to user Texture Unit 0
+				//glUniform1i(TextureIDChair, 0);
 
-				// 1rst attribute buffer : vertices
-				glEnableVertexAttribArray(vertexPosition_modelspaceID);
-				glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
-				glVertexAttribPointer(
-															vertexPosition_modelspaceID,  // The attribute we want to configure
-															3,                            // size
-															GL_FLOAT,                     // type
-															GL_FALSE,                     // normalized?
-															0,                            // stride
-															(void*)0                      // array buffer offset
-															);
+				//// 1rst attribute buffer : vertices
+				//glEnableVertexAttribArray(vertexPosition_modelspaceID);
+				//glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
+				//glVertexAttribPointer(
+				//											vertexPosition_modelspaceID,  // The attribute we want to configure
+				//											3,                            // size
+				//											GL_FLOAT,                     // type
+				//											GL_FALSE,                     // normalized?
+				//											0,                            // stride
+				//											(void*)0                      // array buffer offset
+				//											);
 
-				// 2nd attribute buffer : UVs
-				glEnableVertexAttribArray(vertexUVID);
-				glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
-				glVertexAttribPointer(
-															vertexUVID,                   // The attribute we want to configure
-															2,                            // size : U+V => 2
-															GL_FLOAT,                     // type
-															GL_FALSE,                     // normalized?
-															0,                            // stride
-															(void*)0                      // array buffer offset
-															);
+				//// 2nd attribute buffer : UVs
+				//glEnableVertexAttribArray(vertexUVID);
+				//glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
+				//glVertexAttribPointer(
+				//											vertexUVID,                   // The attribute we want to configure
+				//											2,                            // size : U+V => 2
+				//											GL_FLOAT,                     // type
+				//											GL_FALSE,                     // normalized?
+				//											0,                            // stride
+				//											(void*)0                      // array buffer offset
+				//											);
 
-				// 3rd attribute buffer : normals
-				glEnableVertexAttribArray(vertexNormal_modelspaceID);
-				glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
-				glVertexAttribPointer(
-															vertexNormal_modelspaceID,    // The attribute we want to configure
-															3,                            // size
-															GL_FLOAT,                     // type
-															GL_FALSE,                     // normalized?
-															0,                            // stride
-															(void*)0                      // array buffer offset
-															);
+				//// 3rd attribute buffer : normals
+				//glEnableVertexAttribArray(vertexNormal_modelspaceID);
+				//glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
+				//glVertexAttribPointer(
+				//											vertexNormal_modelspaceID,    // The attribute we want to configure
+				//											3,                            // size
+				//											GL_FLOAT,                     // type
+				//											GL_FALSE,                     // normalized?
+				//											0,                            // stride
+				//											(void*)0                      // array buffer offset
+				//											);
 
-				// Draw the triangles !
-				glDrawArrays(GL_TRIANGLES, 0, verticesChair.size() );
+				//// Draw the triangles !
+				//glDrawArrays(GL_TRIANGLES, 0, verticesChair.size() );
 
 				// Draw bottle
 				computeMatricesFromInputs();
