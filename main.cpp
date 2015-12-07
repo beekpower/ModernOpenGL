@@ -314,7 +314,7 @@ int main( void )
  		std::vector<glm::vec2> uvsBarrel;
  		std::vector<glm::vec3> normalsBarrel;
 
-
+/*
 		res = loadOBJ("barrel.obj", verticesBarrel, uvsBarrel, normalsBarrel);
 
 		// Load it into a VBO
@@ -333,7 +333,7 @@ int main( void )
 		glGenBuffers(1, &normalbufferBarrel);
 		glBindBuffer(GL_ARRAY_BUFFER, normalbufferBarrel);
 		glBufferData(GL_ARRAY_BUFFER, normalsBarrel.size() * sizeof(glm::vec3), &normalsBarrel[0], GL_STATIC_DRAW);
-
+*/
 
 		std::vector<glm::vec3> verticesChair;
 		std::vector<glm::vec2> uvsChair;
@@ -779,7 +779,7 @@ int main( void )
 				// Draw the triangles !
 				glDrawArrays(GL_TRIANGLES, 0, verticesOrange.size() );
 
-
+/*
 
 				// Draw barrel
 				computeMatricesFromInputs();
@@ -843,7 +843,7 @@ int main( void )
 
 				// Draw the triangles !
 				glDrawArrays(GL_TRIANGLES, 0, verticesBarrel.size() );
-
+*/
 
 
 				// Draw chair
@@ -909,16 +909,16 @@ int main( void )
 				// Draw the triangles !
 				glDrawArrays(GL_TRIANGLES, 0, verticesChair.size() );
 
-
-
 				// Draw bottle
 				computeMatricesFromInputs();
 				ProjectionMatrix = getProjectionMatrix();
 				ViewMatrix = getViewMatrix();
 				ModelMatrix = glm::mat4(1.0);
 
-				ModelMatrix = glm::translate(ModelMatrix, vec3(-7,3,-3));
-
+				ModelMatrix = glm::translate(ModelMatrix, vec3(-12,4,3));
+                ModelMatrix = glm::scale(ModelMatrix, vec3(3,2,3));
+                ModelMatrix = glm::rotate(ModelMatrix, -55.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        
 				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 				// Send our transformation to the currently bound shader,
