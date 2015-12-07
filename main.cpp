@@ -148,6 +148,12 @@ int main( void )
 		// Get a handle for our "myTextureSampler" uniform
 		GLuint TextureIDBarrel = glGetUniformLocation(programID, "myTextureSampler");
 
+		// Load the texture
+		GLuint TextureChair = loadBMP_custom("chair.bmp");
+
+		// Get a handle for our "myTextureSampler" uniform
+		GLuint TextureIDChair = glGetUniformLocation(programID, "myTextureSampler");
+
 
 	// Read our .obj file
 	std::vector<glm::vec3> verticesMesh;
@@ -327,6 +333,57 @@ int main( void )
 		glGenBuffers(1, &normalbufferBarrel);
 		glBindBuffer(GL_ARRAY_BUFFER, normalbufferBarrel);
 		glBufferData(GL_ARRAY_BUFFER, normalsBarrel.size() * sizeof(glm::vec3), &normalsBarrel[0], GL_STATIC_DRAW);
+
+
+		std::vector<glm::vec3> verticesChair;
+		std::vector<glm::vec2> uvsChair;
+		std::vector<glm::vec3> normalsChair;
+
+
+		res = loadOBJ("chair.obj", verticesChair, uvsChair, normalsChair);
+
+		// Load it into a VBO
+
+		GLuint vertexbufferChair;
+		glGenBuffers(1, &vertexbufferChair);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
+		glBufferData(GL_ARRAY_BUFFER, verticesChair.size() * sizeof(glm::vec3), &verticesChair[0], GL_STATIC_DRAW);
+
+		GLuint uvbufferChair;
+		glGenBuffers(1, &uvbufferChair);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
+		glBufferData(GL_ARRAY_BUFFER, uvsChair.size() * sizeof(glm::vec2), &uvsChair[0], GL_STATIC_DRAW);
+
+		GLuint normalbufferChair;
+		glGenBuffers(1, &normalbufferChair);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
+		glBufferData(GL_ARRAY_BUFFER, normalsChair.size() * sizeof(glm::vec3), &normalsChair[0], GL_STATIC_DRAW);
+
+		std::vector<glm::vec3> verticesBottle;
+		std::vector<glm::vec2> uvsBottle;
+		std::vector<glm::vec3> normalsBottle;
+
+
+		res = loadOBJ("bottle.obj", verticesBottle, uvsBottle, normalsBottle);
+
+		// Load it into a VBO
+
+		GLuint vertexbufferBottle;
+		glGenBuffers(1, &vertexbufferBottle);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferBottle);
+		glBufferData(GL_ARRAY_BUFFER, verticesBottle.size() * sizeof(glm::vec3), &verticesBottle[0], GL_STATIC_DRAW);
+
+		GLuint uvbufferBottle;
+		glGenBuffers(1, &uvbufferBottle);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbufferBottle);
+		glBufferData(GL_ARRAY_BUFFER, uvsBottle.size() * sizeof(glm::vec2), &uvsBottle[0], GL_STATIC_DRAW);
+
+		GLuint normalbufferBottle;
+		glGenBuffers(1, &normalbufferBottle);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbufferBottle);
+		glBufferData(GL_ARRAY_BUFFER, normalsBottle.size() * sizeof(glm::vec3), &normalsBottle[0], GL_STATIC_DRAW);
+
+
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
@@ -730,7 +787,7 @@ int main( void )
 				ViewMatrix = getViewMatrix();
 				ModelMatrix = glm::mat4(1.0);
 
-				ModelMatrix = glm::translate(ModelMatrix, vec3(3,10,0));
+				ModelMatrix = glm::translate(ModelMatrix, vec3(3,3,0));
 
 				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
@@ -786,6 +843,136 @@ int main( void )
 
 				// Draw the triangles !
 				glDrawArrays(GL_TRIANGLES, 0, verticesBarrel.size() );
+
+
+
+				// Draw chair
+				computeMatricesFromInputs();
+				ProjectionMatrix = getProjectionMatrix();
+				ViewMatrix = getViewMatrix();
+				ModelMatrix = glm::mat4(1.0);
+
+				ModelMatrix = glm::translate(ModelMatrix, vec3(-7,3,10));
+
+				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+				// Send our transformation to the currently bound shader,
+				// in the "MVP" uniform
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+				glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+				glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+
+				// Bind our texture in Texture Unit 0
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, TextureChair);
+				// Set our "myTextureSampler" sampler to user Texture Unit 0
+				glUniform1i(TextureIDChair, 0);
+
+				// 1rst attribute buffer : vertices
+				glEnableVertexAttribArray(vertexPosition_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexbufferChair);
+				glVertexAttribPointer(
+															vertexPosition_modelspaceID,  // The attribute we want to configure
+															3,                            // size
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// 2nd attribute buffer : UVs
+				glEnableVertexAttribArray(vertexUVID);
+				glBindBuffer(GL_ARRAY_BUFFER, uvbufferChair);
+				glVertexAttribPointer(
+															vertexUVID,                   // The attribute we want to configure
+															2,                            // size : U+V => 2
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// 3rd attribute buffer : normals
+				glEnableVertexAttribArray(vertexNormal_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, normalbufferChair);
+				glVertexAttribPointer(
+															vertexNormal_modelspaceID,    // The attribute we want to configure
+															3,                            // size
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// Draw the triangles !
+				glDrawArrays(GL_TRIANGLES, 0, verticesChair.size() );
+
+
+
+				// Draw bottle
+				computeMatricesFromInputs();
+				ProjectionMatrix = getProjectionMatrix();
+				ViewMatrix = getViewMatrix();
+				ModelMatrix = glm::mat4(1.0);
+
+				ModelMatrix = glm::translate(ModelMatrix, vec3(-7,3,-3));
+
+				MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+				// Send our transformation to the currently bound shader,
+				// in the "MVP" uniform
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+				glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+				glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+
+				// Bind our texture in Texture Unit 0
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, TexturePink);
+				// Set our "myTextureSampler" sampler to user Texture Unit 0
+				glUniform1i(TextureIDPink, 0);
+
+				// 1rst attribute buffer : vertices
+				glEnableVertexAttribArray(vertexPosition_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexbufferBottle);
+				glVertexAttribPointer(
+															vertexPosition_modelspaceID,  // The attribute we want to configure
+															3,                            // size
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// 2nd attribute buffer : UVs
+				glEnableVertexAttribArray(vertexUVID);
+				glBindBuffer(GL_ARRAY_BUFFER, uvbufferBottle);
+				glVertexAttribPointer(
+															vertexUVID,                   // The attribute we want to configure
+															2,                            // size : U+V => 2
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// 3rd attribute buffer : normals
+				glEnableVertexAttribArray(vertexNormal_modelspaceID);
+				glBindBuffer(GL_ARRAY_BUFFER, normalbufferBottle);
+				glVertexAttribPointer(
+															vertexNormal_modelspaceID,    // The attribute we want to configure
+															3,                            // size
+															GL_FLOAT,                     // type
+															GL_FALSE,                     // normalized?
+															0,                            // stride
+															(void*)0                      // array buffer offset
+															);
+
+				// Draw the triangles !
+				glDrawArrays(GL_TRIANGLES, 0, verticesBottle.size() );
 
 
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
